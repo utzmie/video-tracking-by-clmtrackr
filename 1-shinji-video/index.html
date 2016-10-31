@@ -38,6 +38,7 @@
 				<ul>
 					<li><a href="//github.com/auduno/clmtrackr" target="_blank">clmtrackr</a></li>
 				</ul>
+				<p>Chrome（最新版）では特別問題なく動作するはずです・・・</p>
 
 				<div id="contents">
 
@@ -94,26 +95,6 @@
 					#filter {
 						display: none;
 					}
-					
-					h2 {
-						font-weight : 400;
-					}
-
-					.nogum {
-						display : none;
-					}
-					
-					.btn {
-						font-size: 16px;
-					}
-
-					.hide {
-						display : none;
-					}
-
-					.nohide {
-						display : block;
-					}
 				</style>
 
 				<script src="clmtrackr/examples/ext_js/utils.js"></script>
@@ -164,40 +145,6 @@
 							return true;
 						} else return false;
 					}
-					// navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-					// window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
-
-					// check for camerasupport
-					// if (navigator.getUserMedia) {
-					// 	// set up stream
-						
-					// 	var videoSelector = {video : true};
-					// 	if (window.navigator.appVersion.match(/Chrome\/(.*?) /)) {
-					// 		var chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
-					// 		if (chromeVersion < 20) {
-					// 			videoSelector = "video";
-					// 		}
-					// 	};
-					
-					// 	navigator.getUserMedia(videoSelector, function( stream ) {
-					// 		if (vid.mozCaptureStream) {
-					// 			vid.mozSrcObject = stream;
-					// 		} else {
-					// 			vid.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
-					// 		}
-					// 		vid.play();
-					// 	}, function() {
-					// 		insertAltVideo(vid);
-					// 		document.getElementById('gum').className = "hide";
-					// 		document.getElementById('nogum').className = "nohide";
-					// 		alert("There was some problem trying to fetch video from your webcam, using a fallback video instead.");
-					// 	});
-					// } else {
-					// 	insertAltVideo(vid);
-					// 	document.getElementById('gum').className = "hide";
-					// 	document.getElementById('nogum').className = "nohide";
-					// 	alert("Your browser does not seem to support getUserMedia, using a fallback video instead.");
-					// }
 
 					vid.addEventListener('canplay', enablestart, false);
 					
