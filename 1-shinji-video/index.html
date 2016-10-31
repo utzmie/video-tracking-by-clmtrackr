@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>トラッキングテスト by clmtrackr</title>
+	<meta property="og:title" content="トラッキングテスト by clmtrackr">
+	<meta property="og:type" content="article">
+	<meta property="og:url" content="https://utzmie.github.io/video-tracking-by-clmtrackr/1-shinji-video">
+	<meta property="og:description" content="動画の顔認証テスト">
+	<meta property="og:site_name" content="utzmie">
+	<meta property="og:locale" content="ja_JP">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="トラッキングテスト by clmtrackr">
+	<meta name="twitter:description" content="動画の顔認証テスト">
+	<link rel="stylesheet" href="./style.css">
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-WKMH9W');</script>
+	<!-- End Google Tag Manager -->
+</head>
+<body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WKMH9W"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+	<div class="l-container">
+		<header class="l-header">
+			<p class="l-header__logo">utzmie（実験場）</p>
+		</header>
+		<main class="l-body">
+			<article>
+				<h1>トラッキングテスト by clmtrackr</h1>
+				<ul>
+					<li><a href="//github.com/auduno/clmtrackr" target="_blank">clmtrackr</a></li>
+				</ul>
+
+				<div id="contents">
+
+					<div id="container">
+						<video id="videoel" width="720" height="405" loop muted preload="auto">
+							<source src="video.mp4">
+						</video>
+						<!--<video id="videoel" width="320" height="240" preload="auto">-->
+						<canvas id="overlay" width="720" height="405"></canvas>
+						<!--<canvas id="sketch" width="400" height="300"></canvas>-->
+					</div>
+
+					<p style="text-align: center;">
+						<!-- <button id="startbutton" class="c-btn" disabled="disabled">Button</button> -->
+						<input class="c-btn" type="button" value="wait, loading video" disabled="disabled" onclick="startVideo()" id="startbutton">
+					</p>
+
+				</div><!-- #contents -->
+
+				<style>
+			
+					body {
+						font-family: 'Lato';
+						background-color: #f0f0f0;
+						margin: 0px auto;
+						max-width: 1150px;
+					}
+					
+					#overlay {
+						position: absolute;
+						top: 0px;
+						left: 0px;
+/* 						-o-transform : scaleX(-1);
+						-webkit-transform : scaleX(-1);
+						transform : scaleX(-1); */
+						-ms-filter : fliph; /*IE*/
+						filter : fliph; /*IE*/
+					}
+
+					#videoel {
+/* 						-o-transform : scaleX(-1);
+						-webkit-transform : scaleX(-1);
+						transform : scaleX(-1); */
+						-ms-filter : fliph; /*IE*/
+						filter : fliph; /*IE*/
+					}
+					
+					#container {
+						position : relative;
+						width : 370px;
+						/*margin : 0px auto;*/
+					}
+					
+					#content {
+						margin-top : 70px;
+						margin-left : 100px;
+						margin-right : 100px;
+						max-width: 950px;
+					}
+					
+					#sketch {
+						display: block;
+					}
+					
+					#filter {
+						display: none;
+					}
+					
+					h2 {
+						font-weight : 400;
+					}
+
+					.nogum {
+						display : none;
+					}
+					
+					.btn {
+						font-family: 'Lato';
+						font-size: 16px;
+					}
+
+					.hide {
+						display : none;
+					}
+
+					.nohide {
+						display : block;
+					}
+				</style>
+
+				<script src="clmtrackr/examples/ext_js/utils.js"></script>
+				<script src="clmtrackr/examples/ext_js/jsfeat-min.js"></script>
+				<script src="clmtrackr/examples/ext_js/frontalface.js"></script>
+				<script src="clmtrackr/examples/ext_js/jsfeat_detect.js"></script>
+				<script src="clmtrackr/examples/ext_js/numeric-1.2.6.min.js"></script>
+				<script src="clmtrackr/examples/ext_js/mosse.js"></script>
+				<script src="clmtrackr/examples/ext_js/left_eye_filter.js"></script>
+				<script src="clmtrackr/examples/ext_js/right_eye_filter.js"></script>
+				<script src="clmtrackr/examples/ext_js/nose_filter.js"></script>
+				<script src="clmtrackr/models/model_pca_20_svm.js"></script>
+				<script src="clmtrackr/js/clm.js"></script>
+				<script src="clmtrackr/js/svmfilter_webgl.js"></script>
+				<script src="clmtrackr/js/svmfilter_fft.js"></script>
+				<script src="clmtrackr/js/mossefilter.js"></script>
+				<script src="clmtrackr/examples/ext_js/Stats.js"></script>
+
+				<script>
+					var vid = document.getElementById('videoel');
+					var overlay = document.getElementById('overlay');
+					var overlayCC = overlay.getContext('2d');
+					
+					var ctrack = new clm.tracker({useWebGL : true});
+					ctrack.init(pModel);
+					
+					stats = new Stats();
+					stats.domElement.style.position = 'absolute';
+					stats.domElement.style.top = '0px';
+					document.getElementById('container').appendChild( stats.domElement );
+					
+					function enablestart() {
+						var startbutton = document.getElementById('startbutton');
+						startbutton.value = "start";
+						startbutton.disabled = null;
+					}
+					
+					var insertAltVideo = function(video) {
+						if (supports_video()) {
+							if (supports_ogg_theora_video()) {
+								video.src = "./video.mp4";
+							} else if (supports_h264_baseline_video()) {
+								video.src = "./video.mp4";
+							} else {
+								return false;
+							}
+							//video.play();
+							return true;
+						} else return false;
+					}
+					// navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+					// window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
+
+					// check for camerasupport
+					// if (navigator.getUserMedia) {
+					// 	// set up stream
+						
+					// 	var videoSelector = {video : true};
+					// 	if (window.navigator.appVersion.match(/Chrome\/(.*?) /)) {
+					// 		var chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+					// 		if (chromeVersion < 20) {
+					// 			videoSelector = "video";
+					// 		}
+					// 	};
+					
+					// 	navigator.getUserMedia(videoSelector, function( stream ) {
+					// 		if (vid.mozCaptureStream) {
+					// 			vid.mozSrcObject = stream;
+					// 		} else {
+					// 			vid.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+					// 		}
+					// 		vid.play();
+					// 	}, function() {
+					// 		insertAltVideo(vid);
+					// 		document.getElementById('gum').className = "hide";
+					// 		document.getElementById('nogum').className = "nohide";
+					// 		alert("There was some problem trying to fetch video from your webcam, using a fallback video instead.");
+					// 	});
+					// } else {
+					// 	insertAltVideo(vid);
+					// 	document.getElementById('gum').className = "hide";
+					// 	document.getElementById('nogum').className = "nohide";
+					// 	alert("Your browser does not seem to support getUserMedia, using a fallback video instead.");
+					// }
+
+					vid.addEventListener('canplay', enablestart, false);
+					
+					function startVideo() {
+						// start video
+						vid.play();
+						// start tracking
+						ctrack.start(vid);
+						// start loop to draw face
+						drawLoop();
+					}
+					
+					function drawLoop() {
+						requestAnimFrame(drawLoop);
+						overlayCC.clearRect(0, 0, 400, 300);
+						//psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
+						if (ctrack.getCurrentPosition()) {
+							ctrack.draw(overlay);
+						}
+					}
+					
+					// update stats on every iteration
+					document.addEventListener('clmtrackrIteration', function(event) {
+						stats.update();
+					}, false);
+					
+				</script>
+
+			</article>
+		</main>
+		<footer role="contentinfo" class="l-footer">
+			<div class="l-footer__author">
+				<ul>
+					<li><a href="/">HOME</a></li>
+				</ul>
+			</div>
+		</footer>
+	</div><!-- /container -->
+</body>
+</html>
